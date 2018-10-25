@@ -45,41 +45,35 @@ spec:
       }
     }
 
-    stages {
-      stage('Test') {
-        steps {
-            /* `make check` returns non-zero on test failures,
-            * using `true` to allow the Pipeline to continue nonetheless
-            */
-            container('maven') {
-              sh 'mvn test'
-            }
+    stage('Test') {
+      steps {
+          /* `make check` returns non-zero on test failures,
+          * using `true` to allow the Pipeline to continue nonetheless
+          */
+          container('maven') {
+            sh 'mvn test'
+          }
+      }
+    }
+
+    stage('Build') {
+      steps {
+        /* `make check` returns non-zero on test failures,
+        * using `true` to allow the Pipeline to continue nonetheless
+        */
+        container('docker') {
+          sh 'docker build -t my-app:$BUILD_NUMBER'
         }
       }
     }
 
-    stages {
-      stage('Build') {
-        steps {
-          /* `make check` returns non-zero on test failures,
-          * using `true` to allow the Pipeline to continue nonetheless
-          */
-          container('docker') {
-            sh 'docker build -t my-app:$BUILD_NUMBER'
-          }
-        }
-      }
-    }
-
-    stages {
-      stage('Run') {
-        steps {
-          /* `make check` returns non-zero on test failures,
-          * using `true` to allow the Pipeline to continue nonetheless
-          */
-          container('docker') {
-            sh 'docker run my-app:$BUILD_NUMBER'
-          }
+    stage('Run') {
+      steps {
+        /* `make check` returns non-zero on test failures,
+        * using `true` to allow the Pipeline to continue nonetheless
+        */
+        container('docker') {
+          sh 'docker run my-app:$BUILD_NUMBER'
         }
       }
     }
